@@ -160,4 +160,54 @@ class Object(DefaultObject):
                                  object speaks
 
      """
-    pass
+
+    def at_object_creation(self):
+        """
+        Called only at initial creation.
+        """
+
+        # in GRAMS mofo, this isn't the 17th century you know!
+        self.db.weight = 0
+        # In calories, main currency will be calories and bullets
+        self.db.cost = 0
+        # Not completely decided on implementing this - potenially a L W H or a "tiny, small " etc
+        # or perhaps volume. Was thinking to stop people putting a chair in a fannypack
+        #       10 tiny in one small -      Tiny        1
+        #       10 Small in one medium -    Small -     10
+        #       10 Medium in one large -    Medium -    100
+        #       10 Large - VeryLarge -      Large -     1000
+        #       10 VeryLarge - Room - 10000 VeryLarge - 10000
+        #       Room - 100000               Room -      100000
+        #       Fanny Pack - one Medium, 100 bullets,
+        #       Regular Back Page - 5 Medium
+        #       Hiking Pack - 1=2 large
+        #       Car - vary large, truck 3-4 Very Large to 2-3 rooms
+        #
+        #   To carry something you have be able to carry the WEIGHT and fit in a container
+        #
+        #   we'll assume you can carry 300 by default - Worn items removed from this
+        #   We'll also assume users can carry ONE item to their maximum weight without a container.. i.e. body
+        #       Or perhaps we add a "Carry" command, anything can be carried in your hands, just one of them
+        #       Other commands "Drag" - might be a Weight * 3 amount
+
+        self.db.size = 0
+        # some items will have a minimum size object they can fit in
+        # self.db.min_size_fit = 0 # Removed - we were going to enforce this - to hard/complicated/saddens game
+
+        # many items will have a noise modifier which will effect sneaking
+        # We may also have it for weapon attacks.. i.e. firing bow vs gun
+        # will it attract more zombies to you than another person
+        # Increase chance of random encounters
+        self.db.noise_modifier = 0
+
+        # Can this be broken to create other parts
+        # IDEA: Move this to a "material_source" object.. an object that we can create and when broken
+        #       generates further objects for collection
+
+        self.db.breakable = 0
+        # Hidden indicates this object is hidden in the room
+        self.db.hidden_in_room = 0
+
+        self.locks.add("equip:false()")
+
+

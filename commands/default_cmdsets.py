@@ -15,6 +15,12 @@ own cmdsets by inheriting from them or directly from `evennia.CmdSet`.
 """
 
 from evennia import default_cmds
+from commands.command import CmdAbilities
+from commands.command import CmdDisplayRoomInfo
+from commands.command import CmdSkills, CmdProfile, CmdColours
+from commands import movecommands
+from commands.itemcmd import CmdWear, CmdRemove
+from commands.itemcmd import CmdDrop
 
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
@@ -33,7 +39,24 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         #
         # any commands you add below will overload the default ones.
         #
-
+        self.add(CmdWear())
+        self.add(CmdRemove())
+        self.add(CmdAbilities())
+        self.add(CmdDisplayRoomInfo())
+        self.add(CmdSkills())
+        self.add(CmdProfile())
+        self.add(CmdColours())
+        self.add(movecommands.CmdExitErrorNorth())
+        self.add(movecommands.CmdExitErrorNorthWest())
+        self.add(movecommands.CmdExitErrorNorthEast())
+        self.add(movecommands.CmdExitErrorEast())
+        self.add(movecommands.CmdExitErrorSouth())
+        self.add(movecommands.CmdExitErrorSouthWest())
+        self.add(movecommands.CmdExitErrorSouthEast())
+        self.add(movecommands.CmdExitErrorWest())
+        self.add(movecommands.CmdExitErrorUp())
+        self.add(movecommands.CmdExitErrorDown())
+        self.add(CmdDrop())
 
 class AccountCmdSet(default_cmds.AccountCmdSet):
     """

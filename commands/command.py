@@ -6,6 +6,10 @@ Commands describe the input the account can do to the game.
 """
 
 from evennia import Command as BaseCommand
+from evennia.utils.evform import EvForm
+from evennia.utils.evform import EvTable
+from evennia.utils.utils import pad
+
 # from evennia import default_cmds
 
 
@@ -183,3 +187,152 @@ class Command(BaseCommand):
 #                 self.character = self.caller.get_puppet(self.session)
 #             else:
 #                 self.character = None
+
+class CmdAbilities(Command):
+    """
+    List Abilities
+
+    Usage:
+        Abilities
+
+    Displays a list of your current ability values.
+    """
+    key = "abilities"
+    aliases = ["abi"]
+    lock = "cmd:all()"
+    help_Category = "General"
+
+    def func(self):
+        "implements the actual functionality"
+
+        str, agi, mag = self.caller.get_abilities()
+        string = "STR: %s, AGI: %s, MAG: %s" % (str, agi, mag)
+        self.caller.msg(string)
+
+
+class CmdDisplayRoomInfo(Command):
+    """
+    Display Room Information
+
+    Usage:
+        Roominfo or rinfo
+
+    Displays room information for debugging and general snooping.
+    """
+    key = "roominfo"
+    aliases = ["rinfo"]
+    lock = "cmd:all()"
+    help_Category = "General"
+
+    def func(self):
+        "implements the actual functionality"
+
+        roomSize, roomTitle, roomCover, movementMod, zombieEncounter, findItemsChance = self.caller.location.get_roominfo()
+        string = "roomSize: %s, roomTitle: %s, roomCover: %s \nmovementMod: %s, zombieEncounter: %s, findItemsChance: %s " % (
+        roomSize, roomTitle, roomCover, movementMod, zombieEncounter, findItemsChance)
+        self.caller.msg(string)
+
+
+class CmdSkills(Command):
+    """
+    List Skills
+
+    Usage:
+        skills or sk
+
+    Displays list of skills this character has
+    """
+    key = "skills"
+    aliases = ["sk"]
+    lock = "cmd:all()"
+    help_Category = "General"
+
+    def func(self):
+        "implements the actual functionality"
+
+        skillnames = []
+        skilllevels = []
+        for key in self.caller.db.skills:
+            skillnames.append("|G" + key)
+            skilllevels.append("|C" + str(self.caller.db.skills[key]) + "|n")
+
+        skillnames.append("|RSkill Points:")
+        skilllevels.append("|C" + str(self.caller.db.stat_skill_points) + "|n")
+
+        table = EvTable("|GSkill|b", "|GLevel|b",
+                        table=[skillnames, skilllevels], border="cells")
+
+        t = unicode(table)
+        self.caller.msg(t)
+
+
+class CmdProfile(Command):
+    """
+    Show Profile
+
+    Usage:
+        profile/stats/pr
+
+    Displays the basic character profile
+    """
+    key = "profile"
+    aliases = ["stats", "pr"]
+    lock = "cmd:all()"
+    help_Category = "General"
+
+    def func(self):
+        "implements the actual functionality"
+
+        skill_list = ', '.join(self.caller.db.skills)
+
+        form = EvForm("world/zchar.py")
+
+        str_name = "|C" + self.caller.name + "|n"
+        # add data to each tagged form cell
+
+        form.map(cells={1: str_name,
+                        2: "|C" + str(self.caller.db.attr_agility) + "|n",
+                        3: "|C" + str(self.caller.db.attr_constitution) + "|n",
+                        4: "|C" + str(self.caller.db.attr_intelligence) + "|n",
+                        5: "|C" + str(self.caller.db.attr_perception) + "|n",
+                        6: "|C" + str(self.caller.db.attr_strength) + "|n",
+                        7: "|C" + str(self.caller.db.stat_defence_unarmed) + "|n",
+                        8: "|C" + str(self.caller.db.stat_defence_zombie) + "|n",
+                        9: "|C" + str(self.caller.db.stat_defence_physical) + "|n",
+                        "A": "|C" + str(self.caller.db.stat_defence_penetration) + "|n",
+                        "B": "|C" + skill_list + "|n",
+                        "C": "|C" + str(self.caller.db.stat_hitpoints_current) + "|n",
+                        "D": "|C" + str(self.caller.db.stat_hitpoints) + "|n",
+                        "E": "|C" + str(self.caller.db.stat_energy_current) + "|n",
+                        "F": "|C" + str(self.caller.db.stat_energy) + "|n",
+                        "G": "|C" + str(self.caller.db.stat_contagion) + "|n"})
+
+        # unicode is required since the example contains non-ascii characters
+        t = unicode(form)
+
+        self.caller.msg(t)
+
+
+class CmdColours(Command):
+    """
+       Show Colours
+
+       Usage:
+           colours/colors
+
+       Displays list of colors for usage of dev
+       """
+    key = "colours"
+    aliases = ["color"]
+    lock = "cmd:all()"
+    help_Category = "General"
+
+    def func(self):
+        "implements the actual functionality"
+
+        form = EvForm("world/colours.py")
+
+        # unicode is required since the example contains non-ascii characters
+        t = unicode(form)
+
+        self.caller.msg(t)

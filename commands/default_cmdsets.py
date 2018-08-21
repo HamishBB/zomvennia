@@ -20,7 +20,8 @@ from commands.command import CmdDisplayRoomInfo
 from commands.command import CmdSkills, CmdProfile, CmdColours
 from commands import movecommands
 from commands.itemcmd import CmdWear, CmdRemove
-from commands.itemcmd import CmdDrop
+from commands.itemcmd import CmdDrop, CmdEmpty, CmdWield
+from commands.itemcmd import CmdInventory, CmdGive, CmdPut
 
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
@@ -57,6 +58,12 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(movecommands.CmdExitErrorUp())
         self.add(movecommands.CmdExitErrorDown())
         self.add(CmdDrop())
+        self.add(CmdInventory())
+        self.add(CmdGive())
+        self.add(CmdEmpty())
+        self.add(CmdPut())
+        self.add(CmdWield())
+
 
 class AccountCmdSet(default_cmds.AccountCmdSet):
     """

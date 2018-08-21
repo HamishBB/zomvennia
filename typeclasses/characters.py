@@ -12,6 +12,7 @@ from world import rules
 from typeclasses.items import Clothing
 from world.rules_inventory import ClothingSlots
 
+
 class Character(DefaultCharacter):
     """
     The Character defaults to reimplementing some of base Object's hook methods with the
@@ -41,11 +42,11 @@ class Character(DefaultCharacter):
         #set persistent attributes
 
         # Base attributes
-        self.db.attr_strength = 1
-        self.db.attr_agility = 1
-        self.db.attr_intelligence = 1
-        self.db.attr_constitution = 1
-        self.db.attr_perception = 1
+        self.db.attr_strength = 12
+        self.db.attr_agility = 7
+        self.db.attr_intelligence = 8
+        self.db.attr_constitution = 9
+        self.db.attr_perception = 6
 
 
         # Hitpoints
@@ -75,7 +76,7 @@ class Character(DefaultCharacter):
         self.db.stat_defence_penetration = 4
 
         # Max = what they can carry in total (weight?)
-        self.db.stat_encumbrance_max = 100
+        self.db.stat_encumbrance_max = 30000
         # Now = what there actually carrying - we'll update when they pickup/drop items
         self.db.stat_encumbrance_now = 10
 
@@ -88,12 +89,16 @@ class Character(DefaultCharacter):
 
         # List of Skills this character has in dictionary - SKILL - LEVEL
 
-        self.db.skills = {'Hide': 3, 'Sneak': 1, 'Search': 2}
+        self.db.skills = {'Hide': 3, 'Melee': 3, 'Sneak': 1, 'Search': 2}
 
         #skill points to spend
         self.db.stat_skill_points = 3
 
         self.db.items_worn = []
+        self.db.items_main_hand = None
+        self.db.items_off_hand = None
+
+        self.locks.add(";".join(["put:false()"]))  # Don't want to bag someone up
 
     def get_attributes(self):
         """
@@ -112,6 +117,7 @@ class Character(DefaultCharacter):
         Returns list of skills for view skills command
         """
         return self.db.skills
+
     def return_appearance(self, looker):
         """
         This formats a description. It is the hook a 'look' command
@@ -132,6 +138,12 @@ class Character(DefaultCharacter):
                 clothingHelper = ClothingSlots()
                 if clothingHelper.checkwearingit(self, con) == 1:
                     things.append("%s (%s)" % (key, con.db.worn_slot))
+
+        if self.db.items_main_hand is not None:
+            things.append("%s (main hand)" % self.db.items_main_hand.name)
+        if self.db.items_off_hand is not None:
+            things.append("%s (off hand)" % self.db.items_off_hand.name)
+
         # get description, build string
         string = "|c%s|n\n" % self.get_display_name(looker)
         desc = self.db.desc

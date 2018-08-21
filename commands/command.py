@@ -8,7 +8,9 @@ Commands describe the input the account can do to the game.
 from evennia import Command as BaseCommand
 from evennia.utils.evform import EvForm
 from evennia.utils.evform import EvTable
-from evennia.utils.utils import pad
+
+
+
 
 # from evennia import default_cmds
 
@@ -282,6 +284,7 @@ class CmdProfile(Command):
 
     def func(self):
         "implements the actual functionality"
+
 
         skill_list = ', '.join(self.caller.db.skills)
 

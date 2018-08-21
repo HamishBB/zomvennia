@@ -62,7 +62,7 @@ class Room(DefaultRoom):
             key = con.get_display_name(looker)
             if con.destination:
                 exits.append(key)
-            elif con.has_player:
+            elif con.has_account:
                 users.append("%s" % key)
             else:
                 things.append(key)
@@ -98,5 +98,9 @@ class Room(DefaultRoom):
             if self.db.findItemsChance > 10:
                 rock = create_object(key="Rock", location=self)
                 rock.db.desc = "An ordinary rock."
+                rock.db.weight = 20
+                rock.db.cost = 0
+                rock.db.size = 5
+
                 self.db.findItemsChance = 1
 

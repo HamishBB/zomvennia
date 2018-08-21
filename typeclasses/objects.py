@@ -11,6 +11,9 @@ inheritance.
 
 """
 from evennia import DefaultObject
+from characters import Character
+from world.rules_inventory import calculate_encumbrance_now
+
 
 
 class Object(DefaultObject):
@@ -210,4 +213,28 @@ class Object(DefaultObject):
 
         self.locks.add("equip:false()")
 
+    def at_get(self, getter):
+        """
+        at get
 
+        """
+        if getter.is_typeclass(Character, exact=True):
+            calculate_encumbrance_now(getter)
+
+    def at_drop(self, dropper):
+        """
+        at drop
+
+        """
+        if dropper.is_typeclass(Character, exact=True):
+            calculate_encumbrance_now(dropper)
+
+    def at_give(self, giver, getter):
+        """
+        at give
+
+        """
+        if giver.is_typeclass(Character, exact=True):
+            calculate_encumbrance_now(giver)
+        if getter.is_typeclass(Character, exact=True):
+            calculate_encumbrance_now(getter)

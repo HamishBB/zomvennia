@@ -9,8 +9,8 @@ creation commands.
 """
 from evennia import DefaultCharacter
 from world import rules
-from typeclasses.items import Clothing
 from world.rules_inventory import ClothingSlots
+from items import Clothing
 
 
 class Character(DefaultCharacter):

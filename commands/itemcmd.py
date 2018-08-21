@@ -249,7 +249,6 @@ class CmdDrop(MuxCommand):
                                      (caller.name, obj.name),
                                      exclude=caller)
         # Call the object script's at_drop() method.
-        calculate_encumbrance_now(caller)
 
         obj.at_drop(caller)
 
@@ -449,6 +448,7 @@ class CmdEmpty(MuxCommand):
                         item.move_to(emptylocation, quiet=True)
                 caller.msg(msgyou)
                 caller.location.msg_contents(msg, exclude=caller)
+                calculate_encumbrance_now(caller)
 
 
 class CmdWield(MuxCommand):
